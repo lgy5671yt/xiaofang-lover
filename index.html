@@ -1,0 +1,602 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给小芳的心意</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        romantic: {
+                            pink: '#FF85A2',
+                            lightpink: '#FFB6C1',
+                            purple: '#C8A2C8',
+                            lightpurple: '#E6E6FA',
+                            magenta: '#FF00FF',
+                            lavender: '#967BB6'
+                        }
+                    },
+                    fontFamily: {
+                        romantic: ['Dancing Script', 'cursive', 'sans-serif'],
+                        poetry: ['"Noto Serif SC"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .heart-beat {
+                animation: heartbeat 1.5s ease-in-out infinite;
+            }
+            .float {
+                animation: float 3s ease-in-out infinite;
+            }
+            .page-transition {
+                animation: fadeIn 1s ease-in-out;
+            }
+            .btn-hover {
+                transition: all 0.3s ease;
+            }
+            .btn-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+            .text-reveal {
+                opacity: 0;
+                animation: reveal 0.5s forwards;
+            }
+            .carousel-item {
+                display: none;
+                opacity: 0;
+                transition: opacity 1s ease-in-out;
+            }
+            .carousel-item.active {
+                display: block;
+                opacity: 1;
+            }
+            .carousel-indicator {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.5);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .carousel-indicator.active {
+                background-color: white;
+                transform: scale(1.3);
+            }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 3D 图片墙样式 */
+        .photo-wall {
+            perspective: 800px;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            transform-style: preserve-3d;
+            animation: rotate 30s linear infinite;
+        }
+
+        .photo {
+            position: absolute;
+            width: 140px;
+            height: 190px;
+            border: 4px solid white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .photo:hover img {
+            transform: scale(1.1);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* 隐藏滚动条但保留功能 */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-romantic-lightpink to-romantic-lightpurple min-h-screen overflow-x-hidden">
+    <!-- 粒子背景容器 -->
+    <div id="particles-js" class="fixed top-0 left-0 w-full h-full z-0"></div>
+
+    <!-- 第一页 -->
+    <div id="page1" class="page-transition relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="text-center max-w-md mx-auto bg-white/30 backdrop-blur-lg p-6 rounded-2xl shadow-xl border border-white/50">
+            <div class="text-romantic-purple text-5xl mb-6 heart-beat">
+                <i class="fa fa-heart"></i>
+            </div>
+            
+            <div id="text-container" class="text-[clamp(1.4rem,3.5vw,2.2rem)] font-romantic text-gray-800 mb-8 min-h-[130px] flex items-center justify-center px-3">
+                <!-- 打字效果文本将在这里生成 -->
+            </div>
+            
+            <div id="buttons" class="flex justify-center gap-4 mt-6 hidden">
+                <button id="btn1" class="bg-romantic-pink hover:bg-romantic-pink/80 text-white font-bold py-2.5 px-6 rounded-full shadow-lg btn-hover transition-all duration-300">笑了</button>
+                <button id="btn2" class="bg-romantic-purple hover:bg-romantic-purple/80 text-white font-bold py-2.5 px-6 rounded-full shadow-lg btn-hover transition-all duration-300">
+                    真的笑了
+                </button>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-6 text-romantic-lavender/70 text-sm">
+            <p>用心制作 ❤️</p>
+        </div>
+    </div>
+
+    <!-- 第二页 -->
+    <div id="page2" class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 hidden">
+        <div id="page2-text" class="text-[clamp(1.2rem,3vw,1.8rem)] font-romantic text-romantic-purple text-shadow mb-6 text-center px-4 min-h-[80px]">
+            <!-- 打字效果文本将在这里生成 -->
+        </div>
+        
+        <div class="photo-wall">
+            <div class="photo-container" id="photoContainer">
+                <!-- 图片将通过JS动态添加 -->
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center px-4">
+            <p class="text-romantic-purple text-base md:text-lg font-romantic">希望你每天都像现在这样开心</p>
+        </div>
+        
+        <div class="mt-10">
+            <button id="toPage3" class="bg-romantic-pink hover:bg-romantic-pink/80 text-white font-bold py-3 px-8 rounded-full shadow-lg btn-hover transition-all duration-300">
+                下一页
+            </button>
+        </div>
+    </div>
+
+    <!-- 第三页 -->
+    <div id="page3" class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 hidden">
+        <div class="w-full max-w-5xl bg-white/30 backdrop-blur-lg p-6 md:p-10 rounded-2xl shadow-xl border border-white/50">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <!-- 左边文字 -->
+                <div class="w-full md:w-1/2 text-center md:text-right">
+                    <div id="poetry-container" class="text-[clamp(1.5rem,4vw,2rem)] font-poetry text-gray-800 leading-relaxed space-y-4">
+                        <!-- 诗句将在这里逐个显示 -->
+                    </div>
+                </div>
+                
+                <!-- 右边图片轮播 -->
+                <div class="w-full md:w-1/2 relative">
+                    <div id="page3-carousel" class="rounded-xl overflow-hidden shadow-lg border-4 border-white">
+                        <!-- 轮播图片将通过JS动态添加 -->
+                    </div>
+                    
+                    <!-- 轮播指示器 -->
+                    <div id="page3-indicators" class="flex justify-center gap-2 mt-4">
+                        <!-- 指示器将通过JS动态添加 -->
+                    </div>
+                    
+                    <!-- 轮播控制按钮 -->
+                    <button id="page3-prev" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/60 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button id="page3-next" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/60 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-10 text-center">
+                <button id="toPage4" class="bg-romantic-purple hover:bg-romantic-purple/80 text-white font-bold py-3 px-8 rounded-full shadow-lg btn-hover transition-all duration-300">下一页</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第四页（最后一页） -->
+    <div id="page4" class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 hidden">
+        <div class="w-full max-w-4xl bg-white/30 backdrop-blur-lg p-6 md:p-10 rounded-2xl shadow-xl border border-white/50 text-center">
+            <div id="final-text" class="text-[clamp(1.3rem,3vw,1.8rem)] font-romantic text-gray-800 mb-8 leading-relaxed">
+                <!-- 最后一页文字将在这里生成 -->
+            </div>
+            
+            <div id="final-subtext" class="text-[clamp(1rem,2vw,1.3rem)] font-romantic text-gray-700 mb-8 hidden">
+                还是相信，有些东西是不会改变的
+            </div>
+            
+            <!-- 视频区域 -->
+            <div class="mt-6 rounded-xl overflow-hidden shadow-lg border-4 border-white">
+                <video controls="" class="w-full h-auto max-w-2xl mx-auto">
+                    <source src="img/test.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- 背景音乐 - 王力宏《哥们儿》 -->
+    <audio id="backgroundMusic" loop="">
+        <source src="https://music.163.com/song/media/outer/url?id=186016.mp3" type="audio/mpeg">
+       您的浏览器不支持音频播放
+    </audio>
+
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化粒子效果
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 60,
+                        "density": {
+                            "enable": true,
+                            "value_area": 700
+                        }
+                    },
+                    "shape": {
+                        "type": "heart",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#ff0000"
+                        }
+                    },
+                    "color": {
+                        "value": ["#FF85A2", "#C8A2C8", "#FFB6C1", "#967BB6"]
+                    },
+                    "opacity": {
+                        "value": 0.8,
+                        "random": true
+                    },
+                    "size": {
+                        "value": 4,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 120,
+                        "color": "#C8A2C8",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 120,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+
+            // 第一页打字效果
+            const page1Text = "小芳同学，今天过得开心吗？不是心花怒放的花，现在必须要给爷笑一个";
+            const textContainer = document.getElementById('text-container');
+            const buttons = document.getElementById('buttons');
+            let index = 0;
+            
+            function typePage1Text() {
+                if (index < page1Text.length) {
+                    textContainer.textContent += page1Text.charAt(index);
+                    index++;
+                    setTimeout(typePage1Text, 100);
+                } else {
+                    setTimeout(() => {
+                        buttons.classList.remove('hidden');
+                        buttons.classList.add('animate-fadeIn');
+                    }, 500);
+                }
+            }
+            
+            typePage1Text();
+            
+            // 第二页文字打字效果
+            const page2Text = "纵然有些许疾风骤雨，更多的日子还是阳光和煦。";
+            const page2TextContainer = document.getElementById('page2-text');
+            
+            function typePage2Text() {
+                let index = 0;
+                page2TextContainer.textContent = "";
+                
+                function type() {
+                    if (index < page2Text.length) {
+                        page2TextContainer.textContent += page2Text.charAt(index);
+                        index++;
+                        setTimeout(type, 80);
+                    }
+                }
+                
+                type();
+            }
+            
+            // 创建3D图片墙（第二页）
+            function createPhotoWall() {
+                const container = document.getElementById('photoContainer');
+                if (container.children.length > 0) return; // 防止重复创建
+                
+                const imageCount = 5;
+                const angle = 360 / imageCount;
+                
+                const images = [
+                    "img/1-1.jpg",
+                    "img/1-2.jpg",
+                    "img/1-3.jpg",
+                    "img/1-4.jpg",
+                    "img/1-5.jpg"
+                ];
+                
+                for (let i = 0; i < imageCount; i++) {
+                    const photo = document.createElement('div');
+                    photo.className = 'photo';
+                    
+                    const rotateY = i * angle;
+                    photo.style.transform = `rotateY(${rotateY}deg) translateZ(220px)`;
+                    
+                    const img = document.createElement('img');
+                    img.src = images[i];
+                    img.alt = `浪漫回忆 ${i+1}`;
+                    photo.appendChild(img);
+                    
+                    container.appendChild(photo);
+                }
+            }
+            
+            // 第三页轮播功能实现
+            let page3CurrentSlide = 0;
+            let page3SlideInterval;
+            const page3Images = [
+                    "img/3-1.jpg",
+                    "img/3-2.jpg",
+                    "img/3-3.jpg",
+                    "img/3-4.jpg"
+            ];
+            
+            function createPage3Carousel() {
+                const carousel = document.getElementById('page3-carousel');
+                const indicators = document.getElementById('page3-indicators');
+                
+                // 清空现有内容
+                carousel.innerHTML = '';
+                indicators.innerHTML = '';
+                
+                // 创建轮播项和指示器
+                page3Images.forEach((src, i) => {
+                    // 创建轮播图片
+                    const slide = document.createElement('div');
+                    slide.className = `carousel-item ${i === 0 ? 'active' : ''}`;
+                    
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = `美好回忆 ${i+1}`;
+                    img.className = 'w-full h-auto';
+                    
+                    slide.appendChild(img);
+                    carousel.appendChild(slide);
+                    
+                    // 创建指示器
+                    const indicator = document.createElement('div');
+                    indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+                    indicator.addEventListener('click', () => page3GoToSlide(i));
+                    indicators.appendChild(indicator);
+                });
+                
+                // 启动自动轮播
+                page3StartSlideInterval();
+            }
+            
+            function page3GoToSlide(index) {
+                const slides = document.querySelectorAll('#page3-carousel .carousel-item');
+                const indicators = document.querySelectorAll('#page3-indicators .carousel-indicator');
+                
+                // 移除所有活动状态
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                // 设置新的活动状态
+                page3CurrentSlide = index;
+                slides[page3CurrentSlide].classList.add('active');
+                indicators[page3CurrentSlide].classList.add('active');
+            }
+            
+            function page3NextSlide() {
+                page3CurrentSlide = (page3CurrentSlide + 1) % page3Images.length;
+                page3GoToSlide(page3CurrentSlide);
+            }
+            
+            function page3PrevSlide() {
+                page3CurrentSlide = (page3CurrentSlide - 1 + page3Images.length) % page3Images.length;
+                page3GoToSlide(page3CurrentSlide);
+            }
+            
+            function page3StartSlideInterval() {
+                // 清除现有计时器
+                if (page3SlideInterval) clearInterval(page3SlideInterval);
+                // 每5秒切换一次
+                page3SlideInterval = setInterval(page3NextSlide, 5000);
+            }
+            
+            // 第三页轮播控制按钮事件
+            document.getElementById('page3-prev').addEventListener('click', () => {
+                page3PrevSlide();
+                page3StartSlideInterval(); // 重置计时器
+            });
+            
+            document.getElementById('page3-next').addEventListener('click', () => {
+                page3NextSlide();
+                page3StartSlideInterval(); // 重置计时器
+            });
+            
+            // 第三页诗句逐个显示
+            const poetryLines = [
+                "岁月悄然流转，",
+                "历练渐增才智。",
+                "风雨几番洗礼，",
+                "柔肩亦能扛事。"
+            ];
+            const poetryContainer = document.getElementById('poetry-container');
+            
+            function showPoetryLines() {
+                poetryContainer.innerHTML = "";
+                
+                poetryLines.forEach((line, i) => {
+                    setTimeout(() => {
+                        const lineElement = document.createElement('div');
+                        lineElement.textContent = line;
+                        lineElement.classList.add('text-reveal');
+                        lineElement.style.animationDelay = `${i * 0.1}s`;
+                        poetryContainer.appendChild(lineElement);
+                    }, i * 800);
+                });
+            }
+            
+            // 第四页文字打字效果
+            const finalText = "希望不管经历多少抉择与选项，大家还是最初模样，一起怀揣理想，一起成长。";
+            const finalTextContainer = document.getElementById('final-text');
+            const finalSubtext = document.getElementById('final-subtext');
+            
+            function typeFinalText() {
+                let index = 0;
+                finalTextContainer.textContent = "";
+                finalSubtext.classList.add('hidden');
+                
+                function type() {
+                    if (index < finalText.length) {
+                        finalTextContainer.textContent += finalText.charAt(index);
+                        index++;
+                        setTimeout(type, 80);
+                    } else {
+                        setTimeout(() => {
+                            finalSubtext.classList.remove('hidden');
+                            finalSubtext.classList.add('animate-fadeIn');
+                        }, 1000);
+                    }
+                }
+                
+                type();
+            }
+            
+            // 页面跳转逻辑
+            document.getElementById('btn1').addEventListener('click', () => {
+                document.getElementById('page1').classList.add('hidden');
+                document.getElementById('page2').classList.remove('hidden');
+                document.getElementById('page2').classList.add('page-transition');
+                
+                // 播放背景音乐 - 王力宏《哥们儿》
+                document.getElementById('backgroundMusic').play().catch(e => {
+                    console.log("音乐播放需要用户交互，可能在某些浏览器中被阻止:", e);
+                });
+                
+                createPhotoWall();
+                typePage2Text();
+            });
+            
+            document.getElementById('btn2').addEventListener('click', () => {
+                document.getElementById('page1').classList.add('hidden');
+                document.getElementById('page2').classList.remove('hidden');
+                document.getElementById('page2').classList.add('page-transition');
+                
+                document.getElementById('backgroundMusic').play().catch(e => {
+                    console.log("音乐播放需要用户交互，可能在某些浏览器中被阻止:", e);
+                });
+                
+                createPhotoWall();
+                typePage2Text();
+            });
+            
+            document.getElementById('toPage3').addEventListener('click', () => {
+                document.getElementById('page2').classList.add('hidden');
+                document.getElementById('page3').classList.remove('hidden');
+                document.getElementById('page3').classList.add('page-transition');
+                showPoetryLines();
+                createPage3Carousel();
+            });
+            
+            document.getElementById('toPage4').addEventListener('click', () => {
+                // 清除第三页轮播计时器
+                if (page3SlideInterval) clearInterval(page3SlideInterval);
+                
+                document.getElementById('page3').classList.add('hidden');
+                document.getElementById('page4').classList.remove('hidden');
+                document.getElementById('page4').classList.add('page-transition');
+                typeFinalText();
+            });
+        });
+    </script>
+
+
+    </body></html>
