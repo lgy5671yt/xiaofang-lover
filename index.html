@@ -271,6 +271,33 @@
     <script>
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 自动播放背景音乐
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            backgroundMusic.volume = 0.8;
+            backgroundMusic.play().catch(e => {
+                console.log("音乐自动播放失败，需要用户交互:", e);
+                // 添加用户交互提示
+                const musicHint = document.createElement('div');
+                musicHint.style.position = 'fixed';
+                musicHint.style.bottom = '20px';
+                musicHint.style.left = '50%';
+                musicHint.style.transform = 'translateX(-50%)';
+                musicHint.style.padding = '10px 20px';
+                musicHint.style.background = 'rgba(0,0,0,0.7)';
+                musicHint.style.color = 'white';
+                musicHint.style.borderRadius = '20px';
+                musicHint.style.zIndex = '9999';
+                musicHint.textContent = '点击页面任意位置开始播放音乐';
+                document.body.appendChild(musicHint);
+                
+                // 点击页面任意位置播放音乐
+                document.addEventListener('click', function playOnClick() {
+                    backgroundMusic.play();
+                    document.body.removeChild(musicHint);
+                    document.removeEventListener('click', playOnClick);
+                }, { once: true });
+            });
+            
             // 初始化粒子效果
             particlesJS('particles-js', {
                 "particles": {
